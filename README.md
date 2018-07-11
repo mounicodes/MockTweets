@@ -1,5 +1,5 @@
 # MockTweets
-Developed an application that mocks the Twitter App. It should contain all the views/functionalities Twitter.
+Developed an application that mocks the Twitter App. It should contain all the views/functionalities of Twitter.
 ## Implementation Plan:
 Phase # | Description | Status
 --------|-------------|-------
@@ -8,6 +8,8 @@ Phase # | Description | Status
 3|Home Timeline make HashTags,Mentions,Links Clickable| Work In Progress
 ## API:
 Twitter API https://developer.twitter.com/en/docs/api-reference-index
+## 3rd Party Libraries:
+Glide|Retrofit
 ## Implementation:
 * Used TwitterLoginButton for Authentication with Twitter
 * Used Navigation View|View Pager|Tab Layout|Fragments|TwitterApiClient

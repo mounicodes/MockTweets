@@ -1,0 +1,23 @@
+<resources>
+  <string name="app_name">MockTweets</string>
+  <string name="action_settings">Settings</string>
+  <!--Navigation Menu-->
+  <string name="profile">Profile</string>
+  <string name="lists">Lists</string>
+  <string name="bookmarks">Bookmarks</string>
+  <string name="moments">Moments</string>
+  <string name="settings">Settings and Privacy</string>
+  <string name="help">Help Center</string>
+  <!--Navigation Header -->
+  <string name="info">My Info</string>
+  <string name="followers_count">%d Followers</string>
+  <string name="following_count">%d Following</string>
+
+  <string name="drawer_close">Close</string>
+  <string name="drawer_open">Open</string>
+  <!--Tool Bar Titles-->
+  <string name="home">Home</string>
+  <!--Error Messages-->
+  <string name="login_fail">Failed to Authenticate</string>
+
+</resources>

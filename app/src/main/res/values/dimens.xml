@@ -1,0 +1,6 @@
+<resources>
+  <dimen name="fab_margin">16dp</dimen>
+  <dimen name="nav_left_padding">16dp</dimen>
+  <dimen name="default_8dp">8dp</dimen>
+  <dimen name="default_12dp">12dp</dimen>
+</resources>

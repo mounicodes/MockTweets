@@ -19,5 +19,9 @@
   <string name="home">Home</string>
   <!--Error Messages-->
   <string name="login_fail">Failed to Authenticate</string>
+  <string name="hometimeline_Fail">Failed to fetch HomeTimeline</string>
+  <!--Miscellaneous-->
+  <string name="tweets">Tweets</string>
+  <string name="compose_hint">What\'s happening?</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.mounica.mocktweets.Activities;
+package com.mounica.mocktweets.views;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,15 +11,10 @@ import com.mounica.mocktweets.R;
 /**
  * To be implemented in next phase
  */
-
 public class NotificationsFragment extends Fragment {
 
   public static NotificationsFragment newInstance() {
-
-    Bundle args = new Bundle();
-
     NotificationsFragment fragment = new NotificationsFragment();
-    fragment.setArguments(args);
     return fragment;
   }
 

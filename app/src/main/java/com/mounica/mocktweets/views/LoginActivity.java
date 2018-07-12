@@ -1,9 +1,10 @@
-package com.mounica.mocktweets.Activities;
+package com.mounica.mocktweets.views;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 import com.mounica.mocktweets.R;
 import com.twitter.sdk.android.core.Callback;
@@ -13,9 +14,8 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 /**
- * Login Activity
+ * Authentication using Twitter Login Button
  */
-
 public class LoginActivity extends AppCompatActivity {
 
   private static final String TAG = "LoginActivity";
@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
       @Override
       public void failure(TwitterException exception) {
+        Log.e(TAG, "failure: " + R.string.login_fail);
         Toast.makeText(LoginActivity.this, R.string.login_fail, Toast.LENGTH_LONG).show();
       }
     });

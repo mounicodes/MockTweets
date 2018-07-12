@@ -15,7 +15,7 @@
     android:theme="@style/AppTheme">
     <activity
       android:label="Twitter"
-      android:name=".Activities.LoginActivity"
+      android:name=".views.LoginActivity"
       android:theme="@style/LoginActionBar">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -24,9 +24,18 @@
     </activity>
     <activity
       android:label="@string/app_name"
-      android:name=".Activities.MainActivity"
+      android:name=".views.MainActivity"
       android:theme="@style/AppTheme.NoActionBar">
     </activity>
+    <provider
+      android:name="android.support.v4.content.FileProvider"
+      android:authorities="com.mounica.mocktweets.fileprovider"
+      android:grantUriPermissions="true"
+      android:exported="false">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/filepaths" />
+    </provider>
   </application>
 
 </manifest>

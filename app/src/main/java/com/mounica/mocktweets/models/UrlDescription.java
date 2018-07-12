@@ -1,11 +1,7 @@
-package com.mounica.mocktweets.Pojo;
+package com.mounica.mocktweets.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-/**
- * Created by mounicachikkam on 6/28/18.
- */
 
 public class UrlDescription {
 

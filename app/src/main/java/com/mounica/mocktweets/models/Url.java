@@ -1,12 +1,8 @@
-package com.mounica.mocktweets.Pojo;
+package com.mounica.mocktweets.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
-
-/**
- * Created by mounicachikkam on 6/28/18.
- */
 
 public class Url {
 

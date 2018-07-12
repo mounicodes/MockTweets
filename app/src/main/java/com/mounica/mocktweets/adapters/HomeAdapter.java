@@ -1,4 +1,4 @@
-package com.mounica.mocktweets.Adapters;
+package com.mounica.mocktweets.adapters;
 
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +25,6 @@ import java.util.List;
 /**
  * Implementation of the Adapter for Home Timeline.
  */
-
-
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh> {
 
   private static final String TAG = "HomeAdapter";
@@ -78,7 +75,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
 
   @Override
   public int getItemCount() {
-    Log.d(TAG, "getItemCount: ");
     return mHomeTimeLine == null ? 0 : mHomeTimeLine.size();
   }
 

@@ -1,23 +1,31 @@
-package com.mounica.mocktweets.Activities;
+package com.mounica.mocktweets.views;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.TextView;
-import com.mounica.mocktweets.Adapters.ViewPagerAdapter;
+import com.mounica.mocktweets.adapters.ViewPagerAdapter;
 import com.mounica.mocktweets.R;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer.Builder;
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     mToolBar = findViewById(R.id.toolbar);
     mToolBar.setTitle(R.string.home);
     setSupportActionBar(mToolBar);
+
     //Navigation drawer
     drawNavigationView();
 
@@ -68,10 +77,17 @@ public class MainActivity extends AppCompatActivity {
       //TODO to be implemented
       @Override
       public void onClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show();
+        composeTweet();
       }
     });
+  }
+
+  private void composeTweet() {
+
+    TweetComposer.Builder composer = new Builder(MainActivity.this)
+        .text(getResources().getString(R.string.compose_hint));
+    composer.show();
+
   }
 
   private void drawNavigationView() {
@@ -87,10 +103,9 @@ public class MainActivity extends AppCompatActivity {
     mFollowers = headerView.findViewById(R.id.text_followers);
     mFollowing = headerView.findViewById(R.id.text_following);
 
-    mFollowers.setText(String.format(getResources().getString(R.string.followers_count),20));
+    mFollowers.setText(String.format(getResources().getString(R.string.followers_count), 20));
     mFollowing.setText(String.format(getResources().getString(R.string.following_count), 40));
   }
-
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {

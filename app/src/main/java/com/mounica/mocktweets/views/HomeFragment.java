@@ -1,4 +1,4 @@
-package com.mounica.mocktweets.Activities;
+package com.mounica.mocktweets.views;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,11 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.mounica.mocktweets.Adapters.HomeAdapter;
+import com.mounica.mocktweets.adapters.HomeAdapter;
 import com.mounica.mocktweets.R;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.models.Tweet;
@@ -26,7 +27,6 @@ import retrofit2.Response;
  * user from the Twitter Api Client. Max number of tweets are set to 198. Twitter allows a max of
  * 200 tweets per call.
  */
-
 public class HomeFragment extends Fragment {
 
   private static final String TAG = "HomeFragment";
@@ -35,11 +35,8 @@ public class HomeFragment extends Fragment {
   private HomeAdapter mHomeAdapter;
 
   public static HomeFragment newInstance(TwitterApiClient twitterApiClient) {
-
-    Bundle args = new Bundle();
     mTwitterApiClient = twitterApiClient;
     HomeFragment fragment = new HomeFragment();
-    fragment.setArguments(args);
     return fragment;
   }
 
@@ -71,13 +68,13 @@ public class HomeFragment extends Fragment {
 
           @Override
           public void onFailure(Call<List<Tweet>> call, Throwable t) {
+            Log.e(TAG, "onFailure: " + R.string.hometimeline_Fail);
             Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
           }
         });
 
     return view;
   }
-
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

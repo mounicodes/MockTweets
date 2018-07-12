@@ -1,16 +1,16 @@
-package com.mounica.mocktweets.Adapters;
+package com.mounica.mocktweets.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import com.mounica.mocktweets.Activities.HomeFragment;
+import com.mounica.mocktweets.views.HomeFragment;
+import com.mounica.mocktweets.views.TrendsFragment;
 import com.twitter.sdk.android.core.TwitterApiClient;
 
 /**
  * Implementation of the Adapter for the ViewPager. Tabs are set to 4 in the MainActivity.
  * New Fragment is loaded based on the tab chosen by the  user.
  */
-
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
   private static final String TAG = "ViewPagerAdapter";
@@ -29,7 +29,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
       case 0:
         return HomeFragment.newInstance(mTwitterApiClient);
       case 1:
+        return TrendsFragment.newInstance();
       case 2:
+        return TrendsFragment.newInstance();
       case 3:
       default:
         return HomeFragment.newInstance(mTwitterApiClient);

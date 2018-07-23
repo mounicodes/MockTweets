@@ -3,9 +3,9 @@ Developed an application that mocks the Twitter App. It should contain all the v
 ## Implementation Plan:
 Phase # | Description | Status
 --------|-------------|-------
-1|Login with Twitter,Home Timeline,Navigation |Done
-2|Include Trends,Notifications| Work In Progress
-3|Home Timeline make HashTags,Mentions,Links Clickable| Work In Progress
+1|Login with Twitter, Home Timeline, Navigation |Done
+2|Include Trends, Notifications| Work In Progress
+3|Home Timeline make HashTags, Mentions, Links Clickable| Work In Progress
 ## API:
 Twitter API https://developer.twitter.com/en/docs/api-reference-index
 ## 3rd Party Libraries:

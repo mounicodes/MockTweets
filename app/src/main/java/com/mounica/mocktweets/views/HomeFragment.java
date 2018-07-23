@@ -23,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Implementation of the Fragment for Home tab. This basically retrieves the Home Timeline of the
+ * Implementation of the Fragment for Home tab_selector.xml. This basically retrieves the Home Timeline of the
  * user from the Twitter Api Client. Max number of tweets are set to 198. Twitter allows a max of
  * 200 tweets per call.
  */
@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
     mHomeAdapter = new HomeAdapter(mHomeTimeline);
     recyclerView.setAdapter(mHomeAdapter);
 
-    //Home Timeline
+    // Home Timeline
     StatusesService statusesService = mTwitterApiClient.getStatusesService();
     statusesService.homeTimeline(198, null, null, null, null, null, null).enqueue(
         new Callback<List<Tweet>>() {
@@ -72,7 +72,6 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
           }
         });
-
     return view;
   }
 

@@ -6,18 +6,25 @@
   android:layout_height="wrap_content"
   android:padding="@dimen/default_12dp">
 
-  <ImageView
+  <!--<ImageView-->
+  <!--android:id="@+id/image_user"-->
+  <!--android:layout_width="0dp"-->
+  <!--android:layout_height="48dp"-->
+  <!--android:background="@drawable/image_round"-->
+  <!--android:scaleType="centerInside"/>-->
+
+  <de.hdodenhof.circleimageview.CircleImageView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/image_user"
-    android:layout_width="48dp"
-    android:layout_height="48dp"
-    android:scaleType="fitXY"/>
+    android:layout_width="64dp"
+    android:layout_height="64dp"/>
 
   <android.support.constraint.Guideline
     android:id="@+id/guideline"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:layout_constraintGuide_begin="60dp"/>
+    app:layout_constraintGuide_begin="70dp"/>
 
   <TextView
     android:id="@+id/text_username"
@@ -34,7 +41,7 @@
     android:id="@+id/text_timeago"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintStart_toEndOf="@id/text_username"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"/>
 
   <TextView
@@ -46,12 +53,31 @@
     app:layout_constraintStart_toStartOf="@id/guideline"
     app:layout_constraintTop_toBottomOf="@id/text_username"/>
 
-  <TextView
-    android:id="@+id/text_temp_holder"
+  <!--<TextView-->
+  <!--android:id="@+id/text_temp_holder"-->
+  <!--android:layout_width="0dp"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--app:layout_constraintEnd_toEndOf="parent"-->
+  <!--app:layout_constraintStart_toStartOf="@id/guideline"-->
+  <!--app:layout_constraintTop_toBottomOf="@id/text_tweet"/>-->
+
+  <!--<FrameLayout-->
+    <!--android:id="@+id/frame_holder"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="@id/guideline"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/text_tweet"/>-->
+
+  <ViewStub
     android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_height="160dp"
+    android:id="@+id/frame_holder"
+    android:inflatedId="@id/frame_holder"
+    android:layout="@layout/holder_frame_image"
+    android:background="@drawable/bg_image_entity"
     app:layout_constraintStart_toStartOf="@id/guideline"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/text_tweet"/>
 
   <TextView
@@ -64,7 +90,7 @@
     app:layout_constraintHorizontal_bias="0.5"
     app:layout_constraintHorizontal_chainStyle="spread_inside"
     app:layout_constraintStart_toStartOf="@id/guideline"
-    app:layout_constraintTop_toBottomOf="@id/text_temp_holder"/>
+    app:layout_constraintTop_toBottomOf="@id/frame_holder"/>
 
   <TextView
     android:id="@+id/text_retweet"
@@ -75,7 +101,7 @@
     app:layout_constraintHorizontal_bias="0.5"
     app:layout_constraintHorizontal_chainStyle="spread_inside"
     app:layout_constraintStart_toEndOf="@+id/text_comment"
-    app:layout_constraintTop_toBottomOf="@id/text_temp_holder"/>
+    app:layout_constraintTop_toBottomOf="@id/frame_holder"/>
 
   <TextView
     android:id="@+id/text_favourite"
@@ -86,7 +112,7 @@
     app:layout_constraintHorizontal_bias="0.5"
     app:layout_constraintHorizontal_chainStyle="spread_inside"
     app:layout_constraintStart_toEndOf="@+id/text_retweet"
-    app:layout_constraintTop_toBottomOf="@id/text_temp_holder"/>
+    app:layout_constraintTop_toBottomOf="@id/frame_holder"/>
 
   <TextView
     android:id="@+id/text_share"
@@ -97,6 +123,6 @@
     app:layout_constraintHorizontal_bias="0.5"
     app:layout_constraintHorizontal_chainStyle="spread_inside"
     app:layout_constraintStart_toEndOf="@+id/text_favourite"
-    app:layout_constraintTop_toBottomOf="@id/text_temp_holder"/>
+    app:layout_constraintTop_toBottomOf="@id/frame_holder"/>
 
 </android.support.constraint.ConstraintLayout>

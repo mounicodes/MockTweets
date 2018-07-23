@@ -6,21 +6,27 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.mounica.mocktweets.R;
+import com.mounica.mocktweets.TweetClickableEntitites;
 import com.twitter.sdk.android.core.models.HashtagEntity;
+import com.twitter.sdk.android.core.models.MediaEntity;
 import com.twitter.sdk.android.core.models.MentionEntity;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.models.UrlEntity;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 /**
  * Implementation of the Adapter for Home Timeline.
@@ -45,13 +51,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
     List<UrlEntity> urlEntityList = new ArrayList<>();
     List<HashtagEntity> hashtagEntityList = new ArrayList<>();
     List<MentionEntity> mentionEntityList = new ArrayList<>();
+    List<MediaEntity> mediaEntityList = new ArrayList<>();
+    int startIndex = 0;
+    int endIndex = 0;
 
     Tweet tweet = mHomeTimeLine.get(position);
-    urlEntityList = tweet.entities.urls;
-    hashtagEntityList = tweet.entities.hashtags;
-    mentionEntityList = tweet.entities.userMentions;
     Glide.with(holder.mUserImage.getContext())
-        .load(tweet.user.profileImageUrl)
+        .load(tweet.user.profileImageUrlHttps)
         .into(holder.mUserImage);
 
     // UserName formulation Begin
@@ -65,9 +71,76 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
           .setSpan(verificationIcon, userNameBuilder.length() - 1, userNameBuilder.length(),
               Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
+
+    // Get Date
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM");
+    Date date = new Date(tweet.createdAt);
+    holder.mTimeAgo.setText(simpleDateFormat.format(date));
+
     userNameBuilder.append(" @" + tweet.user.screenName);
     holder.mUserName.setText(userNameBuilder);
-    holder.mTweetText.setText(tweet.text);
+
+    // Text processing with hashtags/urls/mentions
+    urlEntityList = tweet.entities.urls;
+    hashtagEntityList = tweet.entities.hashtags;
+    mentionEntityList = tweet.entities.userMentions;
+    SpannableStringBuilder textBuilder = new SpannableStringBuilder(tweet.text);
+    if (urlEntityList != null && urlEntityList.size() > 0) {
+      for (UrlEntity entity : urlEntityList) {
+        startIndex = entity.indices.get(0);
+        endIndex = entity.indices.get(1);
+        textBuilder
+            .setSpan(new TweetClickableEntitites(entity.url, holder.mTweetText.getContext()),
+                startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+      }
+    }
+
+    if (hashtagEntityList.size() > 0) {
+      for (HashtagEntity hashtagEntity : hashtagEntityList) {
+        startIndex = hashtagEntity.indices.get(0);
+        endIndex = hashtagEntity.indices.get(1);
+        textBuilder.setSpan(
+            new TweetClickableEntitites("#" + hashtagEntity.text, holder.mTweetText.getContext()),
+            startIndex, endIndex,
+            Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+      }
+    }
+
+    if (mentionEntityList.size() > 0) {
+      for (MentionEntity mentionEntity : mentionEntityList) {
+        startIndex = mentionEntity.indices.get(0);
+        endIndex = mentionEntity.indices.get(1);
+        textBuilder
+            .setSpan(new TweetClickableEntitites("@" + mentionEntity.screenName,
+                    holder.mTweetText.getContext()), startIndex, endIndex,
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+      }
+    }
+
+    holder.mTweetText.setText(textBuilder);
+    holder.mTweetText.setMovementMethod(LinkMovementMethod.getInstance());
+
+    //Media processing
+    mediaEntityList = tweet.entities.media;
+    if (mediaEntityList.size() > 0) {
+      for (MediaEntity mediaEntity : mediaEntityList) {
+        switch (mediaEntity.type) {
+          case "photo":
+            //inflate the stub to hold image
+            ImageView entityImageView = (ImageView) holder.mViewStub.inflate();
+            int height = mediaEntity.sizes.medium.h;
+            int width = mediaEntity.sizes.medium.w;
+            Glide.with(holder.mViewStub.getContext())
+                .load(mediaEntity.mediaUrlHttps)
+                .fitCenter()
+                .into(entityImageView);
+            break;
+          case "video":
+            break;
+        }
+      }
+    }
+
     holder.mRetweet.setText(String.valueOf(tweet.retweetCount));
     holder.mFavourite.setText(String.valueOf(tweet.favoriteCount));
     holder.mShare.setText("");
@@ -83,17 +156,21 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
 
     private ImageView mUserImage;
     private TextView mUserName;
+    private TextView mTimeAgo;
     private TextView mTweetText;
     private TextView mComment;
     private TextView mRetweet;
     private TextView mFavourite;
     private TextView mShare;
+    private ViewStub mViewStub;
 
     public HomeTimelineVh(View itemView) {
       super(itemView);
       mUserImage = itemView.findViewById(R.id.image_user);
       mUserName = itemView.findViewById(R.id.text_username);
+      mTimeAgo = itemView.findViewById(R.id.text_timeago);
       mTweetText = itemView.findViewById(R.id.text_tweet);
+      mViewStub = itemView.findViewById(R.id.frame_holder);
       mComment = itemView.findViewById(R.id.text_comment);
       mRetweet = itemView.findViewById(R.id.text_retweet);
       mFavourite = itemView.findViewById(R.id.text_favourite);
@@ -106,5 +183,4 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
       mShare.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_vector_share_android, 0, 0, 0);
     }
   }
-
 }

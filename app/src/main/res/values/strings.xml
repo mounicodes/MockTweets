@@ -9,19 +9,26 @@
   <string name="settings">Settings and Privacy</string>
   <string name="help">Help Center</string>
   <!--Navigation Header -->
-  <string name="info">My Info</string>
-  <string name="followers_count">%d Followers</string>
-  <string name="following_count">%d Following</string>
+  <string name="followers_count"><b>%d</b> Followers</string>
+  <string name="following_count"><b>%d</b> Following</string>
+  <!--Navigation Items -->
+  <string name="profile_Edit">Edit Profile</string>
 
   <string name="drawer_close">Close</string>
   <string name="drawer_open">Open</string>
   <!--Tool Bar Titles-->
   <string name="home">Home</string>
+  <string name="notifications">Notifications</string>
+  <string name="messages">Messages</string>
   <!--Error Messages-->
   <string name="login_fail">Failed to Authenticate</string>
   <string name="hometimeline_Fail">Failed to fetch HomeTimeline</string>
   <!--Miscellaneous-->
   <string name="tweets">Tweets</string>
   <string name="compose_hint">What\'s happening?</string>
+  <string name="img_entity_description">Timeline</string>
+  <!--Profile Activity-->
+  <string name="following">Following</string>
+  <string name="followers">Followers</string>
 
 </resources>

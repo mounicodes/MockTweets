@@ -2,8 +2,9 @@ package com.mounica.mocktweets.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
 
   @SerializedName("name")
   @Expose
@@ -629,5 +630,4 @@ public class User {
     this.screenName = screenName;
     return this;
   }
-
 }

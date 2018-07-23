@@ -3,13 +3,15 @@ package com.mounica.mocktweets.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import com.mounica.mocktweets.views.HomeFragment;
+import com.mounica.mocktweets.views.NotificationsFragment;
 import com.mounica.mocktweets.views.TrendsFragment;
 import com.twitter.sdk.android.core.TwitterApiClient;
 
 /**
  * Implementation of the Adapter for the ViewPager. Tabs are set to 4 in the MainActivity.
- * New Fragment is loaded based on the tab chosen by the  user.
+ * New Fragment is loaded based on the tab_selector.xml chosen by the  user.
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -25,17 +27,26 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
   @Override
   public Fragment getItem(int position) {
+    Fragment fragment = null;
     switch (position) {
       case 0:
-        return HomeFragment.newInstance(mTwitterApiClient);
+        Log.i(TAG, "getItem: " + "in tab0");
+        fragment = HomeFragment.newInstance(mTwitterApiClient);
+        break;
       case 1:
-        return TrendsFragment.newInstance();
+        Log.i(TAG, "getItem: " + "in tab1");
+        fragment = TrendsFragment.newInstance();
+        break;
       case 2:
-        return TrendsFragment.newInstance();
+        Log.i(TAG, "getItem: " + "in tab2");
+        fragment = NotificationsFragment.newInstance();
+        break;
       case 3:
-      default:
-        return HomeFragment.newInstance(mTwitterApiClient);
+        Log.i(TAG, "getItem: " + "in tab3");
+        fragment = NotificationsFragment.newInstance();
+        break;
     }
+    return fragment;
   }
 
   @Override

@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
   android:padding="@dimen/default_12dp">
 
   <TextView
-    android:layout_width="50dp"
-    android:layout_height="wrap_content"
     android:id="@+id/text_count_number"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:gravity="top|center"/>
-
-  <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/text_trend_name"
-    app:layout_constraintStart_toEndOf="@id/text_count_number"
+    android:textSize="20sp"
+    android:gravity="center"
+    app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"/>
 
   <TextView
+    android:id="@+id/text_trend_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:textColor="@color/black"
+    android:textSize="20sp"
+    app:layout_constraintStart_toStartOf="@id/guideline_trends"
+    app:layout_constraintTop_toTopOf="parent"/>
+
+  <TextView
     android:id="@+id/text_number_of_tweets"
-    app:layout_constraintStart_toEndOf="@id/text_count_number"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="@id/guideline_trends"
     app:layout_constraintTop_toBottomOf="@id/text_trend_name"/>
 
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_trends"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_begin="35dp"/>
 </android.support.constraint.ConstraintLayout>

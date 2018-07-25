@@ -2,6 +2,7 @@ package com.mounica.mocktweets.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class TrendsAdapter extends RecyclerView.Adapter<TrendsAdapter.TrendViewHolder> {
 
+  private static final String TAG = "TrendsAdapter";
   private List<Trend> mTrendsList = new ArrayList<>();
 
   public TrendsAdapter(List<Trend> trendsList) {
@@ -22,16 +24,30 @@ public class TrendsAdapter extends RecyclerView.Adapter<TrendsAdapter.TrendViewH
   @Override
   public TrendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.holder_rv_trends, parent, true);
+        .inflate(R.layout.holder_rv_trends, parent, false);
     return new TrendViewHolder(view);
   }
 
   @Override
   public void onBindViewHolder(TrendViewHolder holder, int position) {
     Trend trend = mTrendsList.get(position);
-    holder.mCountNumber.setText(String.valueOf(position));
+    Log.d(TAG, "onBindViewHolder: " + trend.getTweetVolume());
+    float trendVolume;
+    String tweetCount;
+    if (trend.getTweetVolume() != null && String.valueOf(trend.getTweetVolume()).length() > 4) {
+      trendVolume = Float.valueOf(String.valueOf(trend.getTweetVolume()));
+      trendVolume /= 1000;
+      tweetCount =
+          String.format("%.1f", trendVolume) + "K " + holder.mTweetCount.getContext().getResources()
+              .getString(R.string.tweets);
+    } else {
+      tweetCount = String.valueOf(trend.getTweetVolume()) + " " + holder.mTweetCount.getContext()
+          .getResources()
+          .getString(R.string.tweets);
+    }
+    holder.mCountNumber.setText(String.valueOf(position + 1));
     holder.mTrendName.setText(trend.getName());
-    holder.mTweetCount.setText(String.valueOf(trend.getTweetVolume()) + R.string.tweets);
+    holder.mTweetCount.setText(tweetCount);
   }
 
   @Override

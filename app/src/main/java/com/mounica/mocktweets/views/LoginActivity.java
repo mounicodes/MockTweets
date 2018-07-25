@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 import com.mounica.mocktweets.R;
 import com.twitter.sdk.android.core.Callback;
@@ -23,9 +24,11 @@ public class LoginActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
+    setTheme(R.style.AppTheme_NoActionBar);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
     mLoginButton = findViewById(R.id.login_button);
+    mLoginButton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     mLoginButton.setCallback(new Callback<TwitterSession>() {
       @Override
       public void success(Result<TwitterSession> result) {

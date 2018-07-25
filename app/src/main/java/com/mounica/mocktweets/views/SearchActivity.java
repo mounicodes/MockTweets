@@ -12,26 +12,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.mounica.mocktweets.R;
+import com.mounica.mocktweets.utils.Constants;
 import com.twitter.sdk.android.tweetui.SearchTimeline;
 import com.twitter.sdk.android.tweetui.TweetTimelineRecyclerViewAdapter;
 
 public class SearchActivity extends AppCompatActivity {
 
   private String mQuery;
+  private static final int MAX_ITEMS_PER_REQUEST = 50;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_search);
-    mQuery = getIntent().getStringExtra("query");
+    mQuery = getIntent().getStringExtra(Constants.INTENT_QUERY);
     RecyclerView recyclerView = findViewById(R.id.rv_searchtimeline);
     recyclerView
         .setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     final SearchTimeline searchTimeline = new SearchTimeline.Builder()
         .query(mQuery)
-        .maxItemsPerRequest(50)
+        .maxItemsPerRequest(MAX_ITEMS_PER_REQUEST)
         .build();
-
     final TweetTimelineRecyclerViewAdapter adapter = new TweetTimelineRecyclerViewAdapter.Builder(
         this)
         .setTimeline(searchTimeline)
@@ -51,7 +52,7 @@ public class SearchActivity extends AppCompatActivity {
       @Override
       public boolean onQueryTextSubmit(String query) {
         Intent intent = new Intent();
-        intent.putExtra("query", query);
+        intent.putExtra(Constants.INTENT_QUERY, query);
         startActivity(intent);
         return true;
       }
@@ -61,7 +62,6 @@ public class SearchActivity extends AppCompatActivity {
         return false;
       }
     });
-
     return super.onCreateOptionsMenu(menu);
   }
 }

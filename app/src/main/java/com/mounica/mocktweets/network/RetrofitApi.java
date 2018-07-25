@@ -14,7 +14,6 @@ public class RetrofitApi {
   private static String mToken = "bearer" + " "
       + Constants.TOKEN;
 
-
   public static Retrofit getClient() {
     OkHttpClient okHttpClient = new OkHttpClient
         .Builder()
@@ -23,7 +22,6 @@ public class RetrofitApi {
           public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
             request = request.newBuilder()
-                .addHeader("Authorization", mToken)
                 .addHeader("Authorization", mToken)
                 .addHeader("Content-Type", "application/json")
                 .build();
@@ -38,9 +36,4 @@ public class RetrofitApi {
         .build();
     return retrofit;
   }
-
-//  @Override
-//  public void getToken(String token) {
-//    mToken = mToken + token;
-//  }
 }

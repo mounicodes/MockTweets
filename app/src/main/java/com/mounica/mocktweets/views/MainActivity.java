@@ -21,13 +21,14 @@ import android.view.View;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.mounica.mocktweets.adapters.ViewPagerAdapter;
 import com.mounica.mocktweets.R;
+import com.mounica.mocktweets.utils.Constants;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterApiClient;
-import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.models.User;
@@ -54,11 +55,8 @@ public class MainActivity extends AppCompatActivity {
   private ViewPager mViewPager;
   private FragmentStatePagerAdapter mFragmentPagerAdapter;
   private Toolbar mToolBar;
-  private TwitterApiClient mTwitterApiClient;
   private TabLayout mTabLayout;
-  private TwitterSession mSession;
-  private com.mounica.mocktweets.models.User mUser;
-  private User mUser1;
+  private User mUser;
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,15 +72,13 @@ public class MainActivity extends AppCompatActivity {
     mToolBar.setTitle(R.string.home);
     setSupportActionBar(mToolBar);
 
-    mTwitterApiClient = TwitterCore.getInstance().getApiClient();
-
     // Navigation drawer
     updateNavigationView();
 
     // Tabs
     mTabLayout = findViewById(R.id.tabs);
     mViewPager = findViewById(R.id.viewpager);
-    mFragmentPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mTwitterApiClient,
+    mFragmentPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
         TAB_COUNT);
     mViewPager.setAdapter(mFragmentPagerAdapter);
     mTabLayout.setupWithViewPager(mViewPager);
@@ -119,12 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ViewPager set tabs;
     FloatingActionButton fab = findViewById(R.id.fab);
-    fab.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        composeTweet();
-      }
-    });
+    fab.setOnClickListener(view -> composeTweet());
   }
 
   private void composeTweet() {
@@ -133,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void updateNavigationView() {
+
     // Set Navigation Toggle
     mNavigationView = findViewById(R.id.nav_view);
     mDrawerLayout = findViewById(R.id.drawer);
@@ -150,21 +142,20 @@ public class MainActivity extends AppCompatActivity {
     mFollowing = headerView.findViewById(R.id.text_following);
 
     // Populate User Details
-    mTwitterApiClient.getAccountService().verifyCredentials(true, false, false).enqueue(
+    Constants.TWITTER_API_CLIENT.getAccountService().verifyCredentials(true, false, false).enqueue(
         new Callback<User>() {
           @Override
           public void success(Result<User> result) {
-            Log.i(TAG, "success: " + "loading user details");
-            mUser1 = result.data;
-            mUserName.setText(mUser1.name);
+            mUser = result.data;
+            mUserName.setText(mUser.name);
             Glide.with(getBaseContext())
-                .load(mUser1.profileImageUrl)
+                .load(mUser.profileImageUrlHttps.replaceFirst("_normal.", "."))
                 .into(mUserDisplayImage);
-            mScreenName.setText("@" + mUser1.screenName);
+            mScreenName.setText("@" + mUser.screenName);
             mFollowers.setText(String
-                .format(getResources().getString(R.string.followers_count), mUser1.followersCount));
+                .format(getResources().getString(R.string.followers_count), mUser.followersCount));
             mFollowing.setText(String
-                .format(getResources().getString(R.string.following_count), mUser1.friendsCount));
+                .format(getResources().getString(R.string.following_count), mUser.friendsCount));
           }
 
           @Override
@@ -173,30 +164,30 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
-    mNavigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
-      @Override
-      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-          case R.id.profile:
-            //TODO Replace with bundle and pass user object. Parcelable error since an object in User object doesn't implement serializable
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            intent.putExtra("name", mUser1.name);
-            intent.putExtra("screen_name", mUser1.screenName);
-            intent.putExtra("followers", mUser1.followersCount);
-            intent.putExtra("following", mUser1.friendsCount);
-            intent.putExtra("bg_image", mUser1.profileBackgroundImageUrlHttps);
-            intent.putExtra("profile_image", mUser1.profileImageUrlHttps);
-            startActivity(intent);
-            break;
-        }
-        return true;
+    mNavigationView.setNavigationItemSelectedListener(item -> {
+      switch (item.getItemId()) {
+        case R.id.profile:
+//          Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+//          intent.putExtra(Constants.INTENT_USER, mUser.name);
+//          intent.putExtra(Constants.INTENT_SCREEN_NAME, mUser.screenName);
+//          intent.putExtra(Constants.INTENT_FOLLOWERS, mUser.followersCount);
+//          intent.putExtra(Constants.INTENT_FOLLOWING, mUser.friendsCount);
+//          intent.putExtra(Constants.INTENT_BG_IMAGE, mUser.profileBackgroundImageUrlHttps);
+//          intent.putExtra(Constants.INTENT_PROFILE_IMG, mUser.profileImageUrlHttps);
+//          startActivity(intent);
+        case R.id.lists:
+        case R.id.bookmarks:
+        case R.id.moments:
+        default:
+          Toast.makeText(MainActivity.this, Constants.TO_BE_IMPLEMENTED, Toast.LENGTH_SHORT).show();
+          break;
       }
+      return true;
     });
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    //TODO implement on nav items selected
     return super.onOptionsItemSelected(item);
   }
 }

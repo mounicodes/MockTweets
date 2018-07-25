@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.mounica.mocktweets.adapters.HomeAdapter;
 import com.mounica.mocktweets.R;
+import com.mounica.mocktweets.utils.Constants;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.services.StatusesService;
@@ -23,20 +24,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Implementation of the Fragment for Home tab_selector.xml. This basically retrieves the Home Timeline of the
- * user from the Twitter Api Client. Max number of tweets are set to 198. Twitter allows a max of
- * 200 tweets per call.
+ * Implementation of the Fragment for Home tab_selector.xml. This basically retrieves the Home
+ * Timeline/User Timeline of the user from the Twitter Api Client. Max number of tweets are set to
+ * 198. Twitter allows a max of 200 tweets per call.
  */
 public class HomeFragment extends Fragment {
 
   private static final String TAG = "HomeFragment";
-  private static TwitterApiClient mTwitterApiClient;
-  private List<Tweet> mHomeTimeline;
+  private static final String CALLER_HOME = "home";
+  private static final String CALLER_PROFILE = "profile";
+  private static final int TWEET_COUNT = 198;
+  private List<Tweet> mTimeline;
   private HomeAdapter mHomeAdapter;
+  private static String mCaller = null;
+  private StatusesService mStatusService;
 
-  public static HomeFragment newInstance(TwitterApiClient twitterApiClient) {
-    mTwitterApiClient = twitterApiClient;
+  public static HomeFragment newInstance(String caller, Bundle bundle) {
     HomeFragment fragment = new HomeFragment();
+    mCaller = caller;
+    Bundle infoBundle = new Bundle();
+    infoBundle.putBundle("information", bundle);
     return fragment;
   }
 
@@ -52,27 +59,53 @@ public class HomeFragment extends Fragment {
     DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
         recyclerView.getContext(), layoutManager.getOrientation());
     recyclerView.addItemDecoration(dividerItemDecoration);
-    mHomeTimeline = new ArrayList<>();
-    mHomeAdapter = new HomeAdapter(mHomeTimeline);
+    mTimeline = new ArrayList<>();
+    mHomeAdapter = new HomeAdapter(mTimeline);
     recyclerView.setAdapter(mHomeAdapter);
+    mStatusService = Constants.TWITTER_API_CLIENT.getStatusesService();
 
-    // Home Timeline
-    StatusesService statusesService = mTwitterApiClient.getStatusesService();
-    statusesService.homeTimeline(198, null, null, null, null, null, null).enqueue(
+    // Differentiate the caller and display either user timeline or home timeline
+    if (mCaller.equals(CALLER_PROFILE)) {
+      makeUserTimelineCall(getArguments().getBundle("information"));
+    } else if (mCaller.equals(CALLER_HOME)) {
+      makeHomeTimelineCall();
+    }
+    return view;
+  }
+
+  private void makeHomeTimelineCall() {
+    mStatusService.homeTimeline(TWEET_COUNT, null, null, null, null, null, null).enqueue(
         new Callback<List<Tweet>>() {
           @Override
           public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
-            mHomeTimeline.addAll(response.body());
+            mTimeline.addAll(response.body());
             mHomeAdapter.notifyDataSetChanged();
           }
 
           @Override
           public void onFailure(Call<List<Tweet>> call, Throwable t) {
-            Log.e(TAG, "onFailure: " + R.string.hometimeline_Fail);
+            Log.e(TAG, "onFailure: " + R.string.hometimeline_fail);
             Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
           }
         });
-    return view;
+  }
+
+  private void makeUserTimelineCall(Bundle bundle) {
+    mStatusService
+        .userTimeline(null, bundle.getString("screen_name"), 20, null, null, false, true, false,
+            false).enqueue(new Callback<List<Tweet>>() {
+      @Override
+      public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
+        mTimeline.addAll(response.body());
+        mHomeAdapter.notifyDataSetChanged();
+      }
+
+      @Override
+      public void onFailure(Call<List<Tweet>> call, Throwable t) {
+        Log.e(TAG, "onFailure: " + R.string.usertimeline_fail);
+        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+      }
+    });
   }
 
   @Override

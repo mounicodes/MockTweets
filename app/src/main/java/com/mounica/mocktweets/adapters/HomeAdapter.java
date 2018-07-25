@@ -15,9 +15,11 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.mounica.mocktweets.R;
 import com.mounica.mocktweets.TweetClickableEntitites;
+import com.mounica.mocktweets.utils.Constants;
 import com.twitter.sdk.android.core.models.HashtagEntity;
 import com.twitter.sdk.android.core.models.MediaEntity;
 import com.twitter.sdk.android.core.models.MentionEntity;
@@ -31,7 +33,12 @@ import java.util.Date;
 /**
  * Implementation of the Adapter for Home Timeline.
  */
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh> {
+public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.BaseViewHolder> {
+
+  private static final int MEDIA_TYPE_DEFAULT_INT = 0;
+  private static final int MEDIA_TYPE_GIF_INT = 1;
+  private static final int MEDIA_TYPE_PHOTO_INT = 2;
+  private static final int MEDIA_TYPE_VIDEO_INT = 3;
 
   private static final String TAG = "HomeAdapter";
   private List<Tweet> mHomeTimeLine = new ArrayList<>();
@@ -41,23 +48,36 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
   }
 
   @Override
-  public HomeTimelineVh onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new HomeTimelineVh(
-        LayoutInflater.from(parent.getContext()).inflate(R.layout.holder_rv_home, parent, false));
+  public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    switch (viewType) {
+      case MEDIA_TYPE_PHOTO_INT:
+        TimeLinePhotoViewHolder viewHolder = new TimeLinePhotoViewHolder(
+            LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.holder_rv_home, parent, false));
+        viewHolder.mMediaView = (ImageView) viewHolder.mViewStub.inflate();
+        return viewHolder;
+      case MEDIA_TYPE_GIF_INT:
+      case MEDIA_TYPE_VIDEO_INT:
+      default:
+        return new BaseViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.holder_rv_home, parent, false));
+    }
   }
 
   @Override
-  public void onBindViewHolder(HomeTimelineVh holder, int position) {
-    List<UrlEntity> urlEntityList = new ArrayList<>();
-    List<HashtagEntity> hashtagEntityList = new ArrayList<>();
-    List<MentionEntity> mentionEntityList = new ArrayList<>();
-    List<MediaEntity> mediaEntityList = new ArrayList<>();
-    int startIndex = 0;
-    int endIndex = 0;
+  public void onBindViewHolder(BaseViewHolder holder, int position) {
+
+    List<UrlEntity> urlEntityList;
+    List<HashtagEntity> hashtagEntityList;
+    List<MentionEntity> mentionEntityList;
+    List<MediaEntity> mediaEntityList;
+    int startIndex;
+    int endIndex;
 
     Tweet tweet = mHomeTimeLine.get(position);
     Glide.with(holder.mUserImage.getContext())
-        .load(tweet.user.profileImageUrlHttps)
+        .load(tweet.user.profileImageUrlHttps.replaceFirst("_normal.", "."))
+        .fitCenter()
         .into(holder.mUserImage);
 
     // UserName formulation Begin
@@ -101,8 +121,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
         endIndex = hashtagEntity.indices.get(1);
         textBuilder.setSpan(
             new TweetClickableEntitites("#" + hashtagEntity.text, holder.mTweetText.getContext()),
-            startIndex, endIndex,
-            Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
       }
     }
 
@@ -110,40 +129,56 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
       for (MentionEntity mentionEntity : mentionEntityList) {
         startIndex = mentionEntity.indices.get(0);
         endIndex = mentionEntity.indices.get(1);
-        textBuilder
-            .setSpan(new TweetClickableEntitites("@" + mentionEntity.screenName,
-                    holder.mTweetText.getContext()), startIndex, endIndex,
-                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        textBuilder.setSpan(new TweetClickableEntitites("@" + mentionEntity.screenName,
+                holder.mTweetText.getContext()), startIndex, endIndex,
+            Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
       }
     }
 
     holder.mTweetText.setText(textBuilder);
     holder.mTweetText.setMovementMethod(LinkMovementMethod.getInstance());
 
-    //Media processing
+    // Media processing
     mediaEntityList = tweet.entities.media;
     if (mediaEntityList.size() > 0) {
       for (MediaEntity mediaEntity : mediaEntityList) {
         switch (mediaEntity.type) {
-          case "photo":
-            //inflate the stub to hold image
-            ImageView entityImageView = (ImageView) holder.mViewStub.inflate();
+          case Constants.MEDIA_TYPE_PHOTO:
             int height = mediaEntity.sizes.medium.h;
             int width = mediaEntity.sizes.medium.w;
-            Glide.with(holder.mViewStub.getContext())
+            Glide.with(((TimeLinePhotoViewHolder) holder).mMediaView.getContext())
                 .load(mediaEntity.mediaUrlHttps)
                 .fitCenter()
-                .into(entityImageView);
+                .into(((TimeLinePhotoViewHolder) holder).mMediaView);
             break;
-          case "video":
+          case Constants.MEDIA_TYPE_GIF:
+          case Constants.MEDIA_TYPE_VIDEO:
+          default:
             break;
         }
       }
     }
-
     holder.mRetweet.setText(String.valueOf(tweet.retweetCount));
     holder.mFavourite.setText(String.valueOf(tweet.favoriteCount));
     holder.mShare.setText("");
+  }
+
+  @Override
+  public int getItemViewType(int position) {
+    String mediaType = "";
+    if (mHomeTimeLine.get(position).entities.media.size() > 0) {
+      mediaType = mHomeTimeLine.get(position).entities.media.get(0).type;
+    }
+    switch (mediaType) {
+      case Constants.MEDIA_TYPE_GIF:
+        return MEDIA_TYPE_GIF_INT;
+      case Constants.MEDIA_TYPE_PHOTO:
+        return MEDIA_TYPE_PHOTO_INT;
+      case Constants.MEDIA_TYPE_VIDEO:
+        return MEDIA_TYPE_VIDEO_INT;
+      default:
+        return MEDIA_TYPE_DEFAULT_INT;
+    }
   }
 
   @Override
@@ -151,8 +186,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
     return mHomeTimeLine == null ? 0 : mHomeTimeLine.size();
   }
 
-
-  public class HomeTimelineVh extends ViewHolder {
+  protected class BaseViewHolder extends ViewHolder {
 
     private ImageView mUserImage;
     private TextView mUserName;
@@ -162,25 +196,38 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeTimelineVh
     private TextView mRetweet;
     private TextView mFavourite;
     private TextView mShare;
-    private ViewStub mViewStub;
 
-    public HomeTimelineVh(View itemView) {
+    public BaseViewHolder(View itemView) {
       super(itemView);
       mUserImage = itemView.findViewById(R.id.image_user);
       mUserName = itemView.findViewById(R.id.text_username);
       mTimeAgo = itemView.findViewById(R.id.text_timeago);
       mTweetText = itemView.findViewById(R.id.text_tweet);
-      mViewStub = itemView.findViewById(R.id.frame_holder);
       mComment = itemView.findViewById(R.id.text_comment);
       mRetweet = itemView.findViewById(R.id.text_retweet);
       mFavourite = itemView.findViewById(R.id.text_favourite);
       mShare = itemView.findViewById(R.id.text_share);
-      mComment.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_vector_reply_stroke, 0, 0, 0);
-      mRetweet
-          .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_vector_retweet_stroke, 0, 0, 0);
-      mFavourite
-          .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_vector_heart_stroke, 0, 0, 0);
-      mShare.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_vector_share_android, 0, 0, 0);
+    }
+  }
+
+  public class TimeLinePhotoViewHolder extends BaseViewHolder {
+
+    private ViewStub mViewStub;
+    private ImageView mMediaView;
+
+    public TimeLinePhotoViewHolder(View itemView) {
+      super(itemView);
+      mViewStub = itemView.findViewById(R.id.frame_holder);
+    }
+  }
+
+  public class TimeLineVideoViewHolder extends BaseViewHolder {
+
+    private VideoView mMediaView;
+
+    public TimeLineVideoViewHolder(View itemView) {
+      super(itemView);
+      mMediaView = (VideoView) itemView.findViewById(R.id.frame_holder);
     }
   }
 }

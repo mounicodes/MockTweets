@@ -8,5 +8,5 @@ import retrofit2.http.Query;
 public interface TwitterInterface {
 
   @GET("trends/place.json")
-  Call<TrendsList> getTrends(@Query("id") Integer woeid);
+  Call<TrendsList[]> getTrends(@Query("id") Integer woeid);
 }

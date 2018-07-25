@@ -14,9 +14,9 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
     <activity
-      android:label="Twitter"
+      android:label="@string/app_name"
       android:name=".views.LoginActivity"
-      android:theme="@style/LoginActionBar">
+      android:theme="@style/LoginActionBar.Launcher">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
@@ -31,15 +31,15 @@
     <activity android:name=".views.ProfileActivity"
       android:theme="@style/AppTheme.NoActionBar"/>
 
-    <provider
-      android:authorities="com.mounica.mocktweets.fileprovider"
-      android:exported="false"
-      android:grantUriPermissions="true"
-      android:name="android.support.v4.content.FileProvider">
-      <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/filepaths"/>
-    </provider>
+<!--    &lt;!&ndash;<provider&ndash;&gt;
+      &lt;!&ndash;android:authorities="com.mounica.mocktweets.fileprovider"&ndash;&gt;
+      &lt;!&ndash;android:exported="false"&ndash;&gt;
+      &lt;!&ndash;android:grantUriPermissions="true"&ndash;&gt;
+      &lt;!&ndash;android:name="android.support.v4.content.FileProvider">&ndash;&gt;
+      &lt;!&ndash;<meta-data&ndash;&gt;
+        &lt;!&ndash;android:name="android.support.FILE_PROVIDER_PATHS"&ndash;&gt;
+        &lt;!&ndash;android:resource="@xml/filepaths"/>&ndash;&gt;
+    &lt;!&ndash;</provider>-->-->
   </application>
 
 </manifest>

@@ -8,24 +8,18 @@
   android:paddingRight="@dimen/nav_left_padding"
   android:paddingTop="@dimen/default_12dp">
 
-  <de.hdodenhof.circleimageview.CircleImageView
+  <com.makeramen.roundedimageview.RoundedImageView
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/image_dp"
-    android:layout_width="80dp"
-    android:layout_height="80dp"
-    android:src="@drawable/ic_account_circle"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
-
-  <!--<ImageView-->
-  <!--android:id="@+id/image_dp"-->
-  <!--android:layout_width="100dp"-->
-  <!--android:layout_height="100dp"-->
-  <!--android:layout_marginStart="4dp"-->
-  <!--android:scaleType="fitCenter"-->
-  <!--android:src="@drawable/ic_account_circle"-->
-  <!--app:layout_constraintStart_toStartOf="parent"-->
-  <!--app:layout_constraintTop_toTopOf="parent"/>-->
+    android:layout_width="54dp"
+    android:layout_height="54dp"
+    android:scaleType="fitCenter"
+    app:riv_border_color="#ffffff"
+    app:riv_border_width="1dip"
+    app:riv_corner_radius="30dip"
+    app:riv_mutate_background="true"
+    app:riv_oval="true"
+    app:riv_tile_mode="repeat"/>
 
   <TextView
     android:id="@+id/text_username"
@@ -57,5 +51,4 @@
     android:layout_height="wrap_content"
     app:layout_constraintStart_toEndOf="@+id/text_following"
     app:layout_constraintTop_toBottomOf="@id/text_screenname"/>
-
 </android.support.constraint.ConstraintLayout>

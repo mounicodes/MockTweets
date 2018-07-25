@@ -4,8 +4,10 @@ Developed an application that mocks the Twitter App. It should contain all the v
 Phase # | Description | Status
 --------|-------------|-------
 1|Login with Twitter, Home Timeline, Navigation |Done
-2|Include Trends, Notifications| Work In Progress
-3|Home Timeline make HashTags, Mentions, Links Clickable| Work In Progress
+2|Include Trends, Compose Tweet | Done
+3|Home Timeline make HashTags, Mentions, Links Clickable| Done
+4|Include Auto-Play Videos/Gifs in Timeline | Work In Progress
+5|Navigation Menu Implementation | To be Implemented
 ## API:
 Twitter API https://developer.twitter.com/en/docs/api-reference-index
 ## 3rd Party Libraries:
@@ -16,10 +18,6 @@ Glide|Retrofit
 * Extracted the necessary drawables from the Twitter APK
 ## Note: 
 Make sure to generate the Access key & Consumer key and place it in the Constants class for this app to work.
-## Screenshots:
+## Demo:
 ------------
-![MockTweets](../assets/Login.png?raw=true)
-------------
-![MockTweets](../assets/Home_Tab.png?raw=true)
-------------
-![MockTweets](../assets/Navigation.png?raw=true)
+![](Tweeter.gif)
